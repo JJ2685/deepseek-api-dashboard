@@ -6,12 +6,12 @@ let mainWindow = null;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 780,
-    height: 580,
-    minWidth: 640,
-    minHeight: 460,
+    width: 280,
+    height: 380,
+    minWidth: 220,
+    minHeight: 300,
     frame: false,
-    backgroundColor: '#e8eaf6',
+    backgroundColor: '#f5f5f5',
     resizable: true,
     show: true,
     webPreferences: {
@@ -41,3 +41,10 @@ app.on('activate', () => {
 
 ipcMain.on('window:close', () => { mainWindow?.close(); });
 ipcMain.on('window:minimize', () => { mainWindow?.minimize(); });
+
+ipcMain.handle('window:toggleAlwaysOnTop', () => {
+  if (!mainWindow) return false;
+  const current = mainWindow.isAlwaysOnTop();
+  mainWindow.setAlwaysOnTop(!current);
+  return !current;
+});
