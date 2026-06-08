@@ -1,0 +1,364 @@
+.app-shell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 24px;
+  background: linear-gradient(135deg, #e8eaf6 0%, #f3e5f5 50%, #e0f2f1 100%);
+}
+
+.glass-window {
+  width: 100%;
+  max-width: 720px;
+  height: 100%;
+  max-height: 540px;
+  background: rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 48px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.glass-window__body {
+  padding: 20px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  flex: 1;
+}
+
+/* ---------- TitleBar ---------- */
+.titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 0 20px;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.titlebar__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a2e;
+  letter-spacing: 0.02em;
+}
+
+.titlebar__actions {
+  display: flex;
+  gap: 5px;
+}
+
+.titlebar__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(10px);
+  color: #555;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.titlebar__btn:hover {
+  background: rgba(255, 255, 255, 0.7);
+  color: #222;
+}
+
+.titlebar__btn--close:hover {
+  background: rgba(255, 80, 80, 0.25);
+  color: #e33;
+}
+
+.titlebar__btn--spinning svg {
+  animation: spin 0.8s linear infinite;
+}
+
+.titlebar__btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* ---------- Finance Card ---------- */
+.finance-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: center;
+  padding: 20px 22px;
+  background: rgba(255, 255, 255, 0.38);
+  backdrop-filter: blur(16px);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.finance-card__amounts {
+  display: flex;
+  gap: 32px;
+}
+
+.finance-card__item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.finance-card__label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.finance-card__value {
+  font-size: 26px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.finance-card__value--blue {
+  color: #3b6df0;
+}
+
+.finance-card__value--orange {
+  color: #f07b3b;
+}
+
+.finance-card__status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  font-weight: 500;
+  color: #2e7d32;
+  white-space: nowrap;
+}
+
+.finance-card__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.finance-card__dot--green {
+  background: #4caf50;
+  box-shadow: 0 0 6px rgba(76, 175, 80, 0.5);
+}
+
+.finance-card__dot--red {
+  background: #f44336;
+  box-shadow: 0 0 6px rgba(244, 67, 54, 0.5);
+}
+
+.finance-card__status--error {
+  color: #c62828;
+}
+
+/* ---------- Trend Chart ---------- */
+.trend-card {
+  padding: 18px 22px;
+  background: rgba(255, 255, 255, 0.38);
+  backdrop-filter: blur(16px);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.trend-card__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+.trend-card__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.trend-card__total {
+  font-size: 13px;
+  color: #777;
+}
+
+.trend-card__total strong {
+  color: #555;
+}
+
+.trend-card__chart {
+  flex: 1;
+  min-height: 0;
+}
+
+/* ---------- Empty State ---------- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 16px;
+  text-align: center;
+}
+
+.empty-state__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+}
+
+.empty-state__text {
+  font-size: 15px;
+  color: #777;
+  font-weight: 500;
+}
+
+.empty-state__btn {
+  padding: 10px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 10px;
+  background: rgba(59, 109, 240, 0.12);
+  color: #3b6df0;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.empty-state__btn:hover {
+  background: rgba(59, 109, 240, 0.22);
+}
+
+/* ---------- Settings Dialog ---------- */
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.dialog {
+  width: 380px;
+  max-width: 90vw;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.dialog__title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.dialog__label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #777;
+}
+
+.dialog__input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: 'SF Mono', 'Consolas', monospace;
+  background: rgba(255, 255, 255, 0.6);
+  color: #333;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.dialog__input:focus {
+  border-color: #3b6df0;
+}
+
+.dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.dialog__btn {
+  padding: 8px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.dialog__btn--cancel {
+  background: rgba(0, 0, 0, 0.06);
+  color: #666;
+}
+
+.dialog__btn--cancel:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.dialog__btn--save {
+  background: #3b6df0;
+  color: #fff;
+}
+
+.dialog__btn--save:hover {
+  background: #2b5cd0;
+}
+
+/* ---------- Loading ---------- */
+.loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2.5px solid rgba(59, 109, 240, 0.15);
+  border-top-color: #3b6df0;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
