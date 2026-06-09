@@ -1,4 +1,4 @@
-import { Bar } from 'react-chartjs-2';
+﻿import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -6,14 +6,12 @@ import {
   BarElement,
   Tooltip,
 } from 'chart.js';
-import type { TooltipItem, ScriptableContext } from 'chart.js';
-import { UsageData, BalanceSnapshot } from '../types';
+import { UsageData } from '../types';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip);
 
 interface Props {
   usage: UsageData | null;
-  balanceSnapshots: BalanceSnapshot[];
   loading: boolean;
 }
 
@@ -23,18 +21,14 @@ function formatTokens(n: number): string {
   return String(n);
 }
 
-function formatBalance(n: number): string {
-  return '¥' + n.toFixed(2);
-}
-
-function createGradient(ctx: CanvasRenderingContext2D, height: number): CanvasGradient {
-  const g = ctx.createLinearGradient(0, 0, 0, height);
+function createGradient(ctx: CanvasRenderingContext2D): CanvasGradient {
+  const g = ctx.createLinearGradient(0, 0, 0, 180);
   g.addColorStop(0, '#6c5ce7');
   g.addColorStop(1, '#3b6df0');
   return g;
 }
 
-export default function TrendChart({ usage, balanceSnapshots, loading }: Props) {
+export default function TrendChart({ usage, loading }: Props) {
   if (loading) {
     return (
       <div className="trend-card">
@@ -43,30 +37,18 @@ export default function TrendChart({ usage, balanceSnapshots, loading }: Props) 
     );
   }
 
-  // Prefer actual API usage data when available (backward compat)
   const daily = usage?.daily ?? [];
-  const hasUsageData = daily.length > 0;
-
-  // Build balance trend data from snapshots
-  const snapLabels = balanceSnapshots.map(s => s.date.slice(5));
-  const snapValues = balanceSnapshots.map(s => s.balance);
-
-  // Decide which dataset to render
-  const labels = hasUsageData ? daily.map(d => d.date.slice(5)) : snapLabels;
-  const values = hasUsageData ? daily.map(d => d.tokens) : snapValues;
-  const hasData = hasUsageData || snapValues.length >= 2;
-
-  const totalTokens = usage?.totalTokens ?? 0;
-  const currentBalance = snapValues.length > 0 ? snapValues[snapValues.length - 1] : 0;
+  const labels = daily.map(d => d.date.slice(5));
+  const values = daily.map(d => d.tokens);
+  const total = usage?.totalTokens ?? 0;
 
   const data = {
     labels,
     datasets: [
       {
         data: values,
-        backgroundColor: (ctx: ScriptableContext<'bar'>) => {
-          const h = ctx.chart.chartArea?.bottom ?? 180;
-          return createGradient(ctx.chart.ctx, h);
+        backgroundColor: (ctx: { chart: { ctx: CanvasRenderingContext2D } }) => {
+          return createGradient(ctx.chart.ctx);
         },
         borderRadius: 6,
         borderSkipped: false,
@@ -75,14 +57,6 @@ export default function TrendChart({ usage, balanceSnapshots, loading }: Props) 
       },
     ],
   };
-
-  const yCallback = hasUsageData
-    ? (v: number | string) => formatTokens(Number(v))
-    : (v: number | string) => formatBalance(Number(v));
-
-  const tooltipLabel = hasUsageData
-    ? (ctx: TooltipItem<'bar'>) => `${Number(ctx.parsed.y ?? 0).toLocaleString()} tokens`
-    : (ctx: TooltipItem<'bar'>) => formatBalance(Number(ctx.parsed.y ?? 0));
 
   const options = {
     responsive: true,
@@ -97,7 +71,7 @@ export default function TrendChart({ usage, balanceSnapshots, loading }: Props) 
         cornerRadius: 8,
         displayColors: false,
         callbacks: {
-          label: tooltipLabel,
+          label: (ctx: { parsed: { y: number } }) => `${ctx.parsed.y.toLocaleString()} tokens`,
         },
       },
     },
@@ -112,7 +86,7 @@ export default function TrendChart({ usage, balanceSnapshots, loading }: Props) 
         ticks: {
           color: '#aaa',
           font: { size: 11 },
-          callback: yCallback,
+          callback: (v: number | string) => formatTokens(Number(v)),
         },
         border: { display: false },
         beginAtZero: true,
@@ -120,23 +94,18 @@ export default function TrendChart({ usage, balanceSnapshots, loading }: Props) 
     },
   };
 
-  const title = hasUsageData ? '消耗趋势' : '余额趋势';
-  const summary = hasUsageData
-    ? `合计 ${formatTokens(totalTokens)}`
-    : `当前余额 ${formatBalance(currentBalance)}`;
-
   return (
     <div className="trend-card">
       <div className="trend-card__header">
-        <span className="trend-card__title">{title}</span>
-        <span className="trend-card__total">{summary}</span>
+        <span className="trend-card__title">消耗趋势</span>
+        <span className="trend-card__total">合计 <strong>{formatTokens(total)}</strong> tokens</span>
       </div>
       <div className="trend-card__chart">
-        {hasData ? (
+        {daily.length > 0 ? (
           <Bar data={data} options={options} />
         ) : (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#bbb', fontSize: 14 }}>
-            数据收集中，请等待下次刷新
+            暂无消耗数据
           </div>
         )}
       </div>

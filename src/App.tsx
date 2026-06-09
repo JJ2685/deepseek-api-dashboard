@@ -1,9 +1,10 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback } from 'react';
 import { useDeepSeekData } from './hooks/useDeepSeekData';
 import TitleBar from './components/TitleBar';
 import SettingsDialog from './components/SettingsDialog';
+import FinanceCard from './components/FinanceCard';
+import TrendChart from './components/TrendChart';
 import EmptyState from './components/EmptyState';
-import { MODULES, getEnabledModules } from './modules/registry';
 import './App.css';
 
 export default function App() {
@@ -11,36 +12,15 @@ export default function App() {
     return localStorage.getItem('deepseek_api_key') ?? '';
   });
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [saveVersion, setSaveVersion] = useState(0);
 
   const data = useDeepSeekData(apiKey);
-  const hasKey = apiKey.length > 0;
 
   const handleSaved = useCallback(() => {
     const key = localStorage.getItem('deepseek_api_key') ?? '';
     setApiKey(key);
-    setSaveVersion(v => v + 1);
   }, []);
 
-  const enabledIds = useMemo(() => {
-    if (!hasKey) return [];
-    return getEnabledModules();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasKey, saveVersion]);
-
-  const moduleProps = useMemo(() => ({
-    balance: data.balance,
-    usage: data.usage,
-    error: data.error,
-    loading: data.loading,
-    monthlySpent: data.monthlySpent,
-    balanceSnapshots: data.balanceSnapshots,
-  }), [data.balance, data.usage, data.error, data.loading, data.monthlySpent, data.balanceSnapshots]);
-
-  const visibleModules = useMemo(() => {
-    if (!hasKey) return [];
-    return MODULES.filter(m => m.required || enabledIds.includes(m.id));
-  }, [hasKey, enabledIds]);
+  const hasKey = apiKey.length > 0;
 
   return (
     <div className="app-shell">
@@ -54,10 +34,15 @@ export default function App() {
           {!hasKey ? (
             <EmptyState onOpenSettings={() => setSettingsOpen(true)} />
           ) : (
-            visibleModules.map(mod => {
-              const M = mod.component;
-              return <M key={mod.id} {...moduleProps} />;
-            })
+            <>
+              <FinanceCard
+                balance={data.balance}
+                usage={data.usage}
+                error={data.error}
+                loading={data.loading}
+              />
+              <TrendChart usage={data.usage} loading={data.loading} />
+            </>
           )}
         </div>
       </div>
@@ -65,7 +50,6 @@ export default function App() {
         open={settingsOpen}
         onClose={() => setSettingsOpen(false)}
         onSaved={handleSaved}
-        hasApiKey={hasKey}
       />
     </div>
   );

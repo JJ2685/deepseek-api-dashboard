@@ -69,11 +69,9 @@ export default function TitleBar({ onRefresh, onSettings, loading }: Props) {
             <Minus size={15} />
           </button>
         )}
-        {isElectron && (
-          <button className="titlebar__btn titlebar__btn--close" onClick={handleClose} title="关闭">
-            <X size={15} />
-          </button>
-        )}
+        <button className="titlebar__btn titlebar__btn--close" onClick={handleClose} title={isElectron ? '关闭' : '隐藏'}>
+          <X size={15} />
+        </button>
       </div>
     </div>
   );

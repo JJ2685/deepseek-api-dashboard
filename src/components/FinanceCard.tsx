@@ -1,23 +1,14 @@
-import { BalanceData, UsageData } from "../types";
-import { estimateCost } from "../services/deepseekApi";
+﻿import { BalanceData, UsageData } from '../types';
 
 interface Props {
   balance: BalanceData | null;
   usage: UsageData | null;
-  monthlySpent: number | null;
   error: string | null;
   loading: boolean;
 }
 
-function fmtBalance(balance: BalanceData | null): string {
-  if (!balance) return "--";
-  const n = parseFloat(balance.totalBalance);
-  if (isNaN(n)) return "--";
-  return n.toFixed(2);
-}
-
-export default function FinanceCard({ balance, usage, monthlySpent, error, loading }: Props) {
-  if (loading && !balance && !usage) {
+export default function FinanceCard({ balance, usage, error, loading }: Props) {
+  if (loading) {
     return (
       <div className="finance-card">
         <div className="loading-wrap"><div className="loading-spinner" /></div>
@@ -25,31 +16,35 @@ export default function FinanceCard({ balance, usage, monthlySpent, error, loadi
     );
   }
 
-  if (error && !balance && !usage) {
+  if (error) {
     return (
       <div className="finance-card">
         <div className="finance-card__amounts">
           <div className="finance-card__item">
             <span className="finance-card__label">状态</span>
-            <span className="finance-card__value" style={{ fontSize: 15, color: "#c62828", fontWeight: 500 }}>
+            <span className="finance-card__value" style={{ fontSize: 15, color: '#c62828', fontWeight: 500 }}>
               {error}
             </span>
           </div>
+        </div>
+        <div className="finance-card__status finance-card__status--error">
+          <span className="finance-card__dot finance-card__dot--red" />
+          连接失败
         </div>
       </div>
     );
   }
 
-  const balanceNum = fmtBalance(balance);
-  const currency = balance?.currency === "CNY" ? "¥" : "$";
+  const balanceNum = balance ? parseFloat(balance.totalBalance).toFixed(2) : '—';
+  const currency = balance?.currency === 'CNY' ? '¥' : '$';
+  const available = balance?.isAvailable ?? false;
 
-  // Priority: balance snapshots > API totalCost > token estimate > "--"
-  const spendDisplay = (() => {
-    if (monthlySpent != null) return monthlySpent.toFixed(2);
-    if (usage?.totalCost != null) return usage.totalCost.toFixed(2);
-    if (usage && usage.totalTokens > 0) return estimateCost(usage.totalTokens).toFixed(2);
-    if (balance) return "--";
-    return "--";
+  const monthlySpend = (() => {
+    if (usage && usage.totalTokens > 0) {
+      const cost = usage.totalTokens * 0.000002;
+      return cost.toFixed(2);
+    }
+    return '—';
   })();
 
   return (
@@ -58,15 +53,19 @@ export default function FinanceCard({ balance, usage, monthlySpent, error, loadi
         <div className="finance-card__item">
           <span className="finance-card__label">账户余额</span>
           <span className="finance-card__value finance-card__value--blue">
-            {balanceNum === "--" ? "--" : `${currency}${balanceNum}`}
+            {balance ? `${currency}${balanceNum}` : '—'}
           </span>
         </div>
         <div className="finance-card__item">
-          <span className="finance-card__label">本月消耗</span>
+          <span className="finance-card__label">本月消费</span>
           <span className="finance-card__value finance-card__value--orange">
-            {spendDisplay === "--" ? "--" : `${currency}${spendDisplay}`}
+            {monthlySpend === '—' ? '—' : `${currency}${monthlySpend}`}
           </span>
         </div>
+      </div>
+      <div className="finance-card__status">
+        <span className={`finance-card__dot ${available ? 'finance-card__dot--green' : 'finance-card__dot--red'}`} />
+        {available ? '账户可用' : '账户不可用'}
       </div>
     </div>
   );
