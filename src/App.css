@@ -1,0 +1,370 @@
+.app-shell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0;
+  background: #f5f5f5;
+}
+
+.glass-window {
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.glass-window__body {
+  padding: 20px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* ---------- TitleBar ---------- */
+.titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  flex-shrink: 0;
+  user-select: none;
+  border-bottom: 1px solid #eee;
+}
+
+.titlebar__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a2e;
+  letter-spacing: 0.02em;
+}
+
+.titlebar__actions {
+  display: flex;
+  gap: 4px;
+}
+
+.titlebar__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #888;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.titlebar__btn:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.titlebar__btn--active {
+  background: #e8f0ff;
+  color: #3b6df0;
+}
+
+.titlebar__btn--close:hover {
+  background: #fee2e2;
+  color: #e33;
+}
+
+.titlebar__btn--spinning svg {
+  animation: spin 0.8s linear infinite;
+}
+
+.titlebar__btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ---------- Finance Card ---------- */
+.finance-card {
+  padding: 20px 22px;
+  background: #fafafa;
+  border-radius: 12px;
+  border: 1px solid #eee;
+}
+
+.finance-card__amounts {
+  display: flex;
+  gap: 32px;
+}
+
+.finance-card__item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.finance-card__label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.finance-card__value {
+  font-size: 26px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.finance-card__value--blue {
+  color: #3b6df0;
+}
+
+.finance-card__value--orange {
+  color: #f07b3b;
+}
+
+/* ---------- Trend Chart ---------- */
+.trend-card {
+  padding: 18px 22px;
+  background: #fafafa;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.trend-card__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+.trend-card__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.trend-card__total {
+  font-size: 13px;
+  color: #999;
+}
+
+.trend-card__total strong {
+  color: #666;
+}
+
+.trend-card__chart {
+  flex: 1;
+  min-height: 0;
+}
+
+/* ---------- Empty State ---------- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 16px;
+  text-align: center;
+}
+
+.empty-state__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #bbb;
+}
+
+.empty-state__text {
+  font-size: 13px;
+  color: #999;
+  font-weight: 500;
+}
+
+.empty-state__btn {
+  padding: 10px 22px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: #fff;
+  color: #3b6df0;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.empty-state__btn:hover {
+  background: #f0f4ff;
+  border-color: #3b6df0;
+}
+
+/* ---------- Settings Dialog ---------- */
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.dialog {
+  width: 320px;
+  max-width: 90vw;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.dialog__title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.dialog__label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #888;
+}
+
+.dialog__input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: "SF Mono", "Consolas", monospace;
+  background: #fafafa;
+  color: #333;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.dialog__input:focus {
+  border-color: #3b6df0;
+}
+
+.dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.dialog__btn {
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  border: 1px solid #e0e0e0;
+}
+
+.dialog__btn--cancel {
+  background: #fff;
+  color: #666;
+}
+
+.dialog__btn--cancel:hover {
+  background: #f5f5f5;
+}
+
+.dialog__btn--save {
+  background: #3b6df0;
+  color: #fff;
+  border-color: #3b6df0;
+}
+
+.dialog__btn--save:hover {
+  background: #2b5cd0;
+}
+
+/* ---------- Loading ---------- */
+.loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2.5px solid #eee;
+  border-top-color: #3b6df0;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+
+/* ---------- Settings Modules ---------- */
+.settings-modules {
+  padding-top: 4px;
+}
+
+.settings-section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+.settings-module-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.settings-module-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #333;
+}
+
+.settings-module-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: #3b6df0;
+  cursor: pointer;
+}
+
+.settings-module-checkbox:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.settings-module-locked {
+  color: #ccc;
+  flex-shrink: 0;
+}
